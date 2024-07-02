@@ -1,4 +1,4 @@
-"""This module defines the EntityInterface class, which is a generic class for entity manipulation."""
+""" This module defines the EntityInterface class, which is a generic class for entity manipulation. """
 
 # importing third-party modules
 from sqlalchemy.orm import declarative_base
@@ -17,15 +17,21 @@ class EntityInterface:
             object: Instance of the class being instantiated.
         """
 
-        self.id = (
-            EntityInterface.session.query(func.count(self.__class__.id)).scalar() + 1
-        )
+        self.id = EntityInterface.session.query(func.count(self.__class__.id)).scalar() + 1
 
         # Registering the instance in the database
         EntityInterface.session.add(self)
 
         # Confirming the registration
         EntityInterface.session.commit()
+
+    def __str__(self) -> str:
+        """Defines how the object is represented inside print statements.
+
+        Returns:
+            str: Object representation
+        """
+        return f"{self.__class__.__name__}_{self.id}"
 
     @classmethod
     def all(cls) -> list:
@@ -35,6 +41,18 @@ class EntityInterface:
             list: List of objects from a given class.
         """
         return EntityInterface.session.query(cls).all()
+
+    @classmethod
+    def find_by_id(cls, id: int):
+        """Returns the instance with the given ID.
+
+        Args:
+            id (int): ID of the instance to be found.
+
+        Returns:
+            object: Instance with the given ID.
+        """
+        return EntityInterface.session.query(cls).filter(cls.id == id).first()
 
     @classmethod
     def update(cls, id: int, new_attributes: dict):
