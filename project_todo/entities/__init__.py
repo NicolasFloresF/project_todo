@@ -1,6 +1,6 @@
 from .event import Event
 from .occurrence import Occurrence
 from .category import Category
-from .category_has_event import CategoryHasEvent
+from .event_category import EventCategory
 
-__all__ = ["Event", "Occurrence", "Category", "CategoryHasEvent"]
+__all__ = ["Event", "Occurrence", "Category", "EventCategory"]
