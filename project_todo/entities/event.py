@@ -25,6 +25,7 @@ class Event(EntityInterface.base, EntityInterface):
     # | event_description | varchar(255) | YES  |     | NULL    |                |
     # | eventPriority     | varchar(45)  | YES  |     | NULL    |                |
     # | EventHasDeadline  | tinyint      | NO   |     | NULL    |                |
+    # | EventStatus       | tinyint      | NO   |     | NULL    |                |
     # +-------------------+--------------+------+-----+---------+----------------+
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -33,8 +34,11 @@ class Event(EntityInterface.base, EntityInterface):
     event_description = Column(String(255), nullable=True)
     eventPriority = Column(String(45), nullable=True)
     EventHasDeadline = Column(Boolean, nullable=False)
+    EventStatus = Column(Boolean, nullable=False)
 
-    def __init__(self, name: str, date: DateTime, description: str, priority: str, deadline: bool) -> object:
+    def __init__(
+        self, name: str, date: DateTime, description: str, priority: str, deadline: bool, status: bool
+    ) -> object:
         """Event constructor
 
         Args:
@@ -53,6 +57,7 @@ class Event(EntityInterface.base, EntityInterface):
         self.event_description = description
         self.eventPriority = priority
         self.EventHasDeadline = deadline
+        self.EventStatus = status
 
         # Calling the parent class (EntityInterface) initialization method
         EntityInterface.__init__(self)
