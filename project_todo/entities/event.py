@@ -51,7 +51,7 @@ class Event(EntityInterface.base, EntityInterface):
         Returns:
             object: Initialized Event instance
         """
-
+        self.id = Event.all()[-1].id + 1
         self.eventName = name
         self.eventDate = date
         self.event_description = description
@@ -70,5 +70,11 @@ class Event(EntityInterface.base, EntityInterface):
             list: List of categories of the event.
         """
 
-        cats = [Category.find_by_id(cat.id) for cat in EventCategory.all() if cat.Event_idEvent == self.id]
+        cats = []
+        for cat in EventCategory.all():
+            print(f"cat id =  {cat.Event_idEvent}")
+            print(f"self id = {self.id}")
+            if cat.Event_idEvent == self.id:
+                cats.append(Category.find_by_id(cat.Category_idCategory))
+
         return cats

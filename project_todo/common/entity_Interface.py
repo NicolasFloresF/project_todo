@@ -17,7 +17,7 @@ class EntityInterface:
             object: Instance of the class being instantiated.
         """
 
-        self.id = EntityInterface.session.query(func.count(self.__class__.id)).scalar() + 1
+        # self.id = EntityInterface.session.query(func.count(self.__class__.id)).scalar() + 1
 
         # Registering the instance in the database
         EntityInterface.session.add(self)

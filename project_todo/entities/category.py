@@ -36,7 +36,7 @@ class Category(EntityInterface.base, EntityInterface):
         Returns:
             object: Initialized category instance
         """
-
+        self.id = Category.all()[-1].id + 1
         self.categoryName = name
         self.categoryColor = color
 
