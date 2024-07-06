@@ -15,6 +15,17 @@ from datetime import date, time
 
 
 def main(page: ft.Page):
+    def route_change(route):
+        print(page.route)
+        page.views.clear()
+        page.views.append(views_handler(page)[page.route])
+        page.update()
+
+    def view_pop(view):
+        page.views.pop()
+        top_view = page.views[-1]
+        page.go(top_view.route)
+
     # page.title = "To-Do App"
     # page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     # page.update()
@@ -29,7 +40,15 @@ def main(page: ft.Page):
     #    print(event.eventName)
 
     # page.add(main_menu())
-    main_menu(page)
+    # main_menu(page)
+    # add_category(page)
+    # page.on_route_change = route_change
+    # page.go("/")
+
+    # uma ideia para troca de página?
+    add_category(page)
+    page.clean()
+    add_event(page)
 
 
 if __name__ == "__main__":
