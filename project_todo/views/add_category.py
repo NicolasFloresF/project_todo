@@ -6,7 +6,10 @@ import flet as ft
 
 
 def add_category(page: ft.Page):
+    from project_todo.common.routing import views_handler
+
     page.title = "Add Category"
+    page.horizontal_alignment = ft.CrossAxisAlignment.START
     page.update()
 
     async def close_dlg(e):
@@ -43,7 +46,7 @@ def add_category(page: ft.Page):
     )
     actions = [
         ft.TextButton("Save", on_click=lambda e: submit()),
-        ft.TextButton("Cancel", on_click=lambda e: page.update()),
+        ft.TextButton("Cancel", on_click=lambda e: views_handler(page)["/"](page)),
     ]
 
     page.add(categoryName, categoryColor, ft.Row(actions))
