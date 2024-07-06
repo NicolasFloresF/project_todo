@@ -36,9 +36,28 @@ class EventCategory(EntityInterface.base, EntityInterface):
         Returns:
             object: Initialized EventCategory instance
         """
-
+        self.id = EventCategory.all()[-1].id + 1
         self.Category_idCategory = idCategory
         self.Event_idEvent = idEvent
 
         # Calling the parent class (EntityInterface) initialization method
         EntityInterface.__init__(self)
+
+    def deletebyEventId(eventId: int):
+        """Deletes all EventCategory instances with the given event ID.
+
+        Args:
+            eventId (int): The event ID
+        """
+        # Gathering the instance by its ID
+        instance = EntityInterface.session.query(EventCategory).filter(EventCategory.Event_idEvent == eventId).first()
+        if instance:
+            # Removing the instance from the database
+            EntityInterface.session.delete(instance)
+
+            # Confirming the transaction
+            EntityInterface.session.commit()
+
+            print(f"Instância {id} deletada com sucesso.")
+        else:
+            print(f"Instância com ID {id} não encontrada.")

@@ -5,10 +5,13 @@ from project_todo.entities.category import Category
 import flet as ft
 
 
-def add_category(page: ft.Page):
+def alter_category(page: ft.Page, toUpdate: int):
     from project_todo.common.routing import views_handler
 
-    page.title = "Add Category"
+    update: Category
+    update = Category.find_by_id(toUpdate)
+
+    page.title = "Alter Category"
     page.horizontal_alignment = ft.CrossAxisAlignment.START
     page.update()
 
@@ -27,22 +30,17 @@ def add_category(page: ft.Page):
     )
 
     def submit():
-        if not categoryName.value or not categoryColor.value:
-            page.dialog = dlg_modal
-            dlg_modal.open = True
-            page.update()
-            return
-        print(f"{categoryColor.value} {categoryName.value}")
-        # Category(categoryName.value, categoryColor.value)
-        print("Category added")
+        Category.update(update.id, {"categoryName": categoryName.value, "categoryColor": "#" + categoryColor.value})
+        views_handler(page)["/"](page)
 
-    categoryName = ft.TextField(label="Category Name")
+    categoryName = ft.TextField(label="Category Name", value=update.categoryName)
     categoryColor = ft.TextField(
         label="Category Color",
         input_filter=ft.InputFilter(allow=True, regex_string=r"[0-9A-F]"),
         max_length=6,
         prefix="#",
         prefix_text="#",
+        value=update.categoryColor[1:],
     )
     actions = [
         ft.TextButton("Save", on_click=lambda e: submit()),

@@ -19,18 +19,16 @@ class Occurrence(EntityInterface.base, EntityInterface):
     # +------------------------+---------+------+-----+---------+----------------+
     # | id                     | int     | NO   | PRI | NULL    | auto_increment |
     # | OccurrenceDeadlineDate | date    | NO   |     | NULL    |                |
-    # | OccurrenceDeadlineTime | time    | NO   |     | NULL    |                |
     # | Event_idEvent          | int     | NO   | MUL | NULL    |                |
     # | OccurrenceStatus       | tinyint | NO   |     | NULL    |                |
     # +------------------------+---------+------+-----+---------+----------------+
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     OccurrenceDeadlineDate = Column(Date, nullable=False)
-    OccurrenceDeadlineTime = Column(Time, nullable=False)
     Event_idEvent = Column(Integer)
     OccurrenceStatus = Column(Boolean, nullable=False)
 
-    def __init__(self, deadlineDate: Date, deadlineTime: Time, idEvent: Integer, status: bool) -> object:
+    def __init__(self, deadlineDate: Date, idEvent: Integer, status: bool) -> object:
         """Occurrence constructor method
 
         Args:
@@ -42,9 +40,8 @@ class Occurrence(EntityInterface.base, EntityInterface):
         Returns:
             object: Initialized Occurrence instance
         """
-
+        self.id = Occurrence.all()[-1].id + 1
         self.OccurrenceDeadlineDate = deadlineDate
-        self.OccurrenceDeadlineTime = deadlineTime
         self.Event_idEvent = idEvent
         self.OccurrenceStatus = status
 

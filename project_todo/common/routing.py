@@ -2,23 +2,21 @@
 from project_todo.views.add_category import *
 from project_todo.views.add_event import *
 from project_todo.views.main_menu import *
+from project_todo.views.alter_category import *
+from project_todo.views.alter_event import *
+from project_todo.views.alter_occurrence import *
 
 # importing third-party modules
 import flet as ft
 
 
-def views_handler(page: ft.Page):
+def views_handler(page: ft.Page, update: int = None):
+    page.clean()
     return {
-        "/": ft.View(
-            route="/",
-            controls=[main_menu(page)],
-        ),
-        "/add_category": ft.View(
-            route="/add_category",
-            controls=[add_category(page)],
-        ),
-        "/add_event": ft.View(
-            route="/add_event",
-            controls=[add_event(page)],
-        ),
+        "/": main_menu,
+        "/add_category": add_category,
+        "/add_event": add_event,
+        "/alter_category": alter_category,
+        "/alter_event": alter_event,
+        "/alter_occurrence": alter_occurrence,
     }

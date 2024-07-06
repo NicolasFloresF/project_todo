@@ -9,92 +9,6 @@ import datetime
 import flet as ft
 
 
-# class CategoryRow(ft.Column):
-#    def __init__(self, category: Category, page: ft.Page):
-#        super().__init__()
-#
-#        self.exp = ft.ExpansionTile(
-#            title=ft.Checkbox(label=f"{category.categoryName}", value=category.CategoryStatus),
-#            maintain_state=True,
-#        )
-#
-#        self.consult = ft.Column(
-#            controls=[
-#                ft.ListTile(
-#                    title=ft.Text(
-#                        f"Description: {category.categoryDescription}",
-#                    )
-#                ),
-#                ft.ListTile(title=ft.Text(f"Creation date: {category.CategoryCreationDate}")),
-#                ft.ListTile(
-#                    trailing=ft.Row(
-#                        alignment=ft.MainAxisAlignment.END,
-#                        controls=[
-#                            ft.IconButton(ft.icons.CREATE, on_click=self.edit_clicked),
-#                            ft.IconButton(ft.icons.DELETE),
-#                        ],
-#                    )
-#                ),
-#            ],
-#        )
-#
-#        self.form = ft.Column(
-#            visible=False,
-#            controls=[
-#                ft.TextField(label="Description", value=category.categoryDescription),
-#                ft.Dropdown(
-#                    width=200,
-#                    options=[
-#                        ft.dropdown.Option("Low"),
-#                        ft.dropdown.Option("Medium"),
-#                        ft.dropdown.Option("High"),
-#                    ],
-#                    label="Priority",
-#                    value=category.categoryPriority,
-#                ),
-#                ft.Checkbox(label="Status", value=category.CategoryStatus),
-#                ft.Row(
-#                    controls=[
-#                        ft.ElevatedButton(
-#                            text="Save",
-#                            on_click=lambda e: self.save_clicked(category, page),
-#                        ),
-#                        ft.ElevatedButton(
-#                            text="Cancel",
-#                            on_click=lambda e: self.cancel_clicked(category, page),
-#                        ),
-#                    ]
-#                ),
-#            ],
-#        )
-#
-#        self.add(self.exp, self.consult, self.form)
-#
-#    def edit_clicked(self, e):
-#        self.exp.visible = False
-#        self.consult.visible = False
-#        self.form.visible = True
-#        e.control.page.update()
-#
-#    def save_clicked(self, category: Category, page: ft.Page):
-#        category.categoryDescription = self.form.controls[0].value
-#        category.categoryPriority = self.form.controls[1].value
-#        category.CategoryStatus = self.form.controls[2].value
-#        category.update()
-#        self.exp.visible = True
-#        self.consult.visible = True
-#        self.form.visible = False
-#        page.update()
-#
-#    def cancel_clicked(self, category: Category, page: ft.Page):
-#        self.exp.visible = True
-#        self.consult.visible = True
-#        self.form.visible = False
-#        page.update
-
-
-# é muita meteção de louco passar uma função como parametro pro construtor de uma classe
-# que será usado pra remover a classe que a chamou,
 class CategoriesRow(ft.Column):
     def __init__(self, id: int, catDelete):
         super().__init__()
@@ -120,7 +34,10 @@ class CategoriesRow(ft.Column):
 
 
 def add_event(page: ft.Page):
+    from project_todo.common.routing import views_handler
+
     page.title = "Add Event"
+    page.horizontal_alignment = ft.CrossAxisAlignment.START
     page.update()
 
     def submit():
@@ -152,7 +69,7 @@ def add_event(page: ft.Page):
                 return
 
             print(deadlinePicker.value)
-            Occurrence(deadlinePicker.value, datetime.datetime.now().strftime("%H:%M:%S"), Ev.id, False)
+            Occurrence(deadlinePicker.value, Ev.id, False)
 
             if repeat.value and radioRepeat.value:
                 print(radioRepeat.value)
@@ -167,7 +84,7 @@ def add_event(page: ft.Page):
                     elif radioRepeat.value == "annually":
                         currDate = currDate + datetime.timedelta(weeks=52)
 
-                    Occurrence(currDate, datetime.datetime.now().strftime("%H:%M:%S"), Ev.id, False)
+                    Occurrence(currDate, Ev.id, False)
 
                     print(currDate)
 
@@ -275,10 +192,6 @@ def add_event(page: ft.Page):
 
     # category control
 
-    # TODO: implement this when update is necessary
-    # for cat in ev.categories:
-    #    page.add(CategoriesRow(category, page))
-
     cats = ft.Column()
 
     catsDropdown = (
@@ -296,7 +209,7 @@ def add_event(page: ft.Page):
 
     actions = [
         ft.TextButton("Save", on_click=lambda e: submit()),
-        ft.TextButton("Cancel", on_click=lambda e: page.update()),
+        ft.TextButton("Cancel", on_click=lambda e: views_handler(page)["/"](page)),
     ]
 
     page.add(
