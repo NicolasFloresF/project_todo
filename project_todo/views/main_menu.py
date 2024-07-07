@@ -57,7 +57,7 @@ class CategoriesRow(ft.Column):
 # TODO: CRUD categorias
 # TODO: adcionar eventos
 class TasksRow(ft.Column):
-    def __init__(self, eventId: int, ocurrenceId: int, evntDelete, evntUpdate):
+    def __init__(self, eventId: int, ocurrenceId: int, evntDelete, evntUpdate, checkEvent):
         super().__init__()
         occurrence: Occurrence
         event: Event
@@ -65,6 +65,7 @@ class TasksRow(ft.Column):
         occurrence = Occurrence.find_by_id(ocurrenceId)
         event = Event.find_by_id(eventId)
 
+        self.event_check = checkEvent
         self.event_delete = evntDelete
         self.event_update = evntUpdate
 
@@ -75,22 +76,22 @@ class TasksRow(ft.Column):
             self.id = event.id
             status = event.EventStatus
 
+        self.hasDeadline = event.EventHasDeadline
         self.exp = ft.ExpansionTile(
-            title=ft.Checkbox(label=f"{event.eventName}", value=status),
+            title="",
             maintain_state=True,
         )
 
-        subTitle = ft.Text()
+        self.Title = ft.Checkbox(label=f"{event.eventName}", value=status, on_change=self.check_event)
+
+        self.subTitle = ft.Text()
         for cat in event.categories:
             txt = ft.TextSpan(text=cat.categoryName, style=ft.TextStyle(color=cat.categoryColor))
-            subTitle.spans.append(txt)
+            self.subTitle.spans.append(txt)
             if cat != event.categories[-1]:
-                subTitle.spans.append(ft.TextSpan(text=", "))
-
-        self.exp.subtitle = subTitle
+                self.subTitle.spans.append(ft.TextSpan(text=", "))
 
         self.consult = ft.Column()
-
         self.ltDesc = (
             ft.ListTile(
                 title=ft.Text(
@@ -120,6 +121,8 @@ class TasksRow(ft.Column):
             ),
         )
 
+        self.exp.title = self.Title
+        self.exp.subtitle = self.subTitle
         self.consult.controls.append(self.ltDesc[0])
         self.consult.controls.append(self.ltDate[0])
         self.consult.controls.append(self.ltPriority[0])
@@ -137,6 +140,12 @@ class TasksRow(ft.Column):
 
     def update_event(self, e):
         self.event_update(self)
+
+    def check_event(self, e):
+        self.event_check(self)
+
+
+confirmation: bool = False
 
 
 def main_menu(page: ft.Page):
@@ -184,6 +193,53 @@ def main_menu(page: ft.Page):
     page.add(occTasks)
     page.add(occurences)
 
+    def close_dlg(e):
+        global confirmation
+        dlg_modal_event.open = False
+        dlg_modal_occurrence.open = False
+        dlg_modal_category.open = False
+        if e.control.text == "Yes":
+            confirmation = True
+        else:
+            confirmation = False
+        page.update()
+        # await e.control.page.update_async()
+
+    dlg_modal_event = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Delete Confirmation"),
+        content=ft.Text("Are you sure you want to delete this event? (this will delete all occurrences of this event)"),
+        actions=[
+            ft.TextButton("Yes", on_click=close_dlg),
+            ft.TextButton("No", on_click=close_dlg),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+
+    dlg_modal_occurrence = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Delete Confirmation"),
+        content=ft.Text("Are you sure you want to delete this occurrence?"),
+        actions=[
+            ft.TextButton("Yes", on_click=close_dlg),
+            ft.TextButton("No", on_click=close_dlg),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+
+    dlg_modal_category = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Delete Confirmation"),
+        content=ft.Text(
+            "Are you sure you want to delete this category? (this will delete all events that have this category)"
+        ),
+        actions=[
+            ft.TextButton("Yes", on_click=close_dlg),
+            ft.TextButton("No", on_click=close_dlg),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
+
     def event_update(event):
         views_handler(page)["/alter_event"](page, event.id)
         page.update()
@@ -192,11 +248,70 @@ def main_menu(page: ft.Page):
         views_handler(page)["/alter_occurrence"](page, occurrence.id)
         page.update
 
-    def event_delete(event):
-        events.controls.remove(event)
+    def event_delete(event: TasksRow):
+        global confirmation
+        dlg_modal_event.open = True
+        page.dialog = dlg_modal_event
+        page.update()
+
+        while dlg_modal_event.open:
+            pass
+
+        if confirmation:
+            toDelete: Event = Event.find_by_id(event.id)
+            print(toDelete.EventHasDeadline)
+
+            EventCategory.delete_by_event_id(toDelete.id)
+
+            if toDelete.EventHasDeadline:
+                Occurrence.delete_by_event_id(toDelete.id)
+                occurences.controls.remove(event)
+            else:
+                events.controls.remove(event)
+
+            Event.delete(toDelete.id)
+
+        confirmation = False
+        page.update()
+
+    def occurrence_delete(occurrence: TasksRow):
+        global confirmation
+        dlg_modal_occurrence.open = True
+        page.dialog = dlg_modal_occurrence
+        page.update()
+
+        while dlg_modal_occurrence.open:
+            pass
+
+        if confirmation:
+            print(occurrence.hasDeadline)
+            events.controls.remove(occurrence)
+            Occurrence.delete(occurrence.id)
+
+        confirmation = False
+        page.update()
+
+    def event_check(event: TasksRow):
+        Event.update(event.id, {"EventStatus": event.Title.value})
+        page.update()
+
+    def occurrence_check(occurrence: TasksRow):
+        Occurrence.update(occurrence.id, {"OccurrenceStatus": occurrence.Title.value})
         page.update()
 
     def cat_delete(cat):
+        global confirmation
+        dlg_modal_category.open = True
+        page.dialog = dlg_modal_category
+        page.update()
+
+        while dlg_modal_category.open:
+            pass
+
+        if confirmation:
+            EventCategory.delete_by_category_id(cat.id)
+            Category.delete(cat.id)
+
         events.controls.remove(cat)
         page.update()
 
@@ -218,7 +333,7 @@ def main_menu(page: ft.Page):
             for event in Event.all():
                 event: Event
 
-                task = TasksRow(event.id, None, event_delete, event_update)
+                task = TasksRow(event.id, None, event_delete, event_update, event_check)
 
                 if event.EventHasDeadline:
                     occurences.controls.append(task)
@@ -241,7 +356,7 @@ def main_menu(page: ft.Page):
 
                 event = Event.find_by_id(ocurrence.Event_idEvent)
 
-                task = TasksRow(event.id, ocurrence.id, event_delete, occurrence_update)
+                task = TasksRow(event.id, ocurrence.id, occurrence_delete, occurrence_update, occurrence_check)
 
                 events.controls.append(task)
 

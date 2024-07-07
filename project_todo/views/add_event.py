@@ -93,6 +93,7 @@ def add_event(page: ft.Page):
             print(cat.id)
             EventCategory(cat.id, Ev.id)
 
+        views_handler(page)["/"](page)
         page.update()
 
     def HasDeadline(e):

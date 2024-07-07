@@ -23,6 +23,12 @@ def alter_occurrence(page: ft.Page, toUpdate: int):
     page.update()
 
     def submit():
+        if not deadlinePicker.value:
+            page.dialog = dlg_modal
+            dlg_modal.open = True
+            page.update()
+            return
+
         Occurrence.update(
             update.id,
             {

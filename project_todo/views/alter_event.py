@@ -44,6 +44,12 @@ def alter_event(page: ft.Page, toUpdate: int):
     page.update()
 
     def submit():
+        if not eventName.value or not eventDescription.value or not eventPriority[0].value:
+            page.dialog = dlg_modal
+            dlg_modal.open = True
+            page.update()
+            return
+
         Event.update(
             update.id,
             {
@@ -55,7 +61,7 @@ def alter_event(page: ft.Page, toUpdate: int):
 
         # event categories
         for cat in update.categories:
-            EventCategory.deletebyEventId(update.id)
+            EventCategory.delete_by_event_id(update.id)
 
         for cat in cats.controls:
             print(cat.id)

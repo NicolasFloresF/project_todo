@@ -43,7 +43,7 @@ class EventCategory(EntityInterface.base, EntityInterface):
         # Calling the parent class (EntityInterface) initialization method
         EntityInterface.__init__(self)
 
-    def deletebyEventId(eventId: int):
+    def delete_by_event_id(eventId: int):
         """Deletes all EventCategory instances with the given event ID.
 
         Args:
@@ -51,7 +51,8 @@ class EventCategory(EntityInterface.base, EntityInterface):
         """
         # Gathering the instance by its ID
         instance = EntityInterface.session.query(EventCategory).filter(EventCategory.Event_idEvent == eventId).first()
-        if instance:
+
+        while instance:
             # Removing the instance from the database
             EntityInterface.session.delete(instance)
 
@@ -59,5 +60,39 @@ class EventCategory(EntityInterface.base, EntityInterface):
             EntityInterface.session.commit()
 
             print(f"Instância {id} deletada com sucesso.")
+
+            instance = (
+                EntityInterface.session.query(EventCategory).filter(EventCategory.Event_idEvent == eventId).first()
+            )
+
+        else:
+            print(f"Instância com ID {id} não encontrada.")
+
+    def delete_by_category_id(categoryId: int):
+        """Deletes all EventCategory instances with the given category ID.
+
+        Args:
+            categoryId (int): The category ID
+        """
+        # Gathering the instance by its ID
+        instance = (
+            EntityInterface.session.query(EventCategory).filter(EventCategory.Category_idCategory == categoryId).first()
+        )
+
+        while instance:
+            # Removing the instance from the database
+            EntityInterface.session.delete(instance)
+
+            # Confirming the transaction
+            EntityInterface.session.commit()
+
+            print(f"Instância {id} deletada com sucesso.")
+
+            instance = (
+                EntityInterface.session.query(EventCategory)
+                .filter(EventCategory.Category_idCategory == categoryId)
+                .first()
+            )
+
         else:
             print(f"Instância com ID {id} não encontrada.")
