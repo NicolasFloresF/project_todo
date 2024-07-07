@@ -72,8 +72,6 @@ class Event(EntityInterface.base, EntityInterface):
 
         cats = []
         for cat in EventCategory.all():
-            print(f"cat id =  {cat.Event_idEvent}")
-            print(f"self id = {self.id}")
             if cat.Event_idEvent == self.id:
                 cats.append(Category.find_by_id(cat.Category_idCategory))
 
