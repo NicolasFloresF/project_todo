@@ -47,3 +47,26 @@ class Occurrence(EntityInterface.base, EntityInterface):
 
         # Calling the parent class (EntityInterface) initialization method
         EntityInterface.__init__(self)
+
+    @classmethod
+    def delete_by_event_id(cls, event_id: int):
+        """Deletes all Occurrence instances with the given event ID.
+
+        Args:
+            event_id (int): The event ID
+        """
+        # Gathering the instance by its ID
+        instance = EntityInterface.session.query(Occurrence).filter(Occurrence.Event_idEvent == event_id).first()
+
+        while instance:
+            # Removing the instance from the database
+            EntityInterface.session.delete(instance)
+
+            # Confirming the transaction
+            EntityInterface.session.commit()
+
+            print(f"Instância {id} deletada com sucesso.")
+
+            instance = EntityInterface.session.query(Occurrence).filter(Occurrence.Event_idEvent == event_id).first()
+        else:
+            print(f"Instância com ID {id} não encontrada.")
