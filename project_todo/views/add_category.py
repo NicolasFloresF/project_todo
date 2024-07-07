@@ -33,7 +33,8 @@ def add_category(page: ft.Page):
             page.update()
             return
         print(f"{categoryColor.value} {categoryName.value}")
-        # Category(categoryName.value, categoryColor.value)
+        Category(categoryName.value, categoryColor.value)
+        views_handler(page)["/"](page)
         print("Category added")
 
     categoryName = ft.TextField(label="Category Name")
