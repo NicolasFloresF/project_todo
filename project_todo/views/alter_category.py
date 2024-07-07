@@ -30,6 +30,11 @@ def alter_category(page: ft.Page, toUpdate: int):
     )
 
     def submit():
+        if not categoryName.value or not categoryColor.value:
+            page.dialog = dlg_modal
+            dlg_modal.open = True
+            page.update()
+            return
         Category.update(update.id, {"categoryName": categoryName.value, "categoryColor": "#" + categoryColor.value})
         views_handler(page)["/"](page)
 
