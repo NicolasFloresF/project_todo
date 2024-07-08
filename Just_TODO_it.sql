@@ -27,7 +27,7 @@ CREATE TABLE `Category` (
   `categoryName` varchar(255) NOT NULL,
   `categoryColor` char(7) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,7 +36,7 @@ CREATE TABLE `Category` (
 
 LOCK TABLES `Category` WRITE;
 /*!40000 ALTER TABLE `Category` DISABLE KEYS */;
-INSERT INTO `Category` VALUES (1,'Work','#FF0000'),(2,'Study','#00FF00'),(3,'Personal','#0000FF'),(4,'Other','#FFFF00');
+INSERT INTO `Category` VALUES (1,'Work','#6E18A3'),(2,'Study','#20C92C'),(3,'Personal','#5DA8FC'),(4,'Other','#FAD02A');
 /*!40000 ALTER TABLE `Category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -54,8 +54,9 @@ CREATE TABLE `Event` (
   `event_description` varchar(255) DEFAULT NULL,
   `eventPriority` varchar(45) DEFAULT NULL,
   `EventHasDeadline` tinyint NOT NULL,
+  `EventStatus` tinyint NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,7 +65,7 @@ CREATE TABLE `Event` (
 
 LOCK TABLES `Event` WRITE;
 /*!40000 ALTER TABLE `Event` DISABLE KEYS */;
-INSERT INTO `Event` VALUES (1,'Event 1','2021-10-10 00:00:00.000000','Description 1','High',1),(2,'Event 2','2021-10-10 00:00:00.000000','Description 2','Medium',0),(3,'Event 3','2021-10-10 00:00:00.000000','Description 3','Low',1),(4,'Event 4','2021-10-10 00:00:00.000000','Description 4','High',0),(5,'Event 5','2021-10-10 00:00:00.000000','Description 5','Medium',1);
+INSERT INTO `Event` VALUES (1,'Event 1','2021-10-10 00:00:00.000000','Description 1','High',1,0),(2,'Event 2','2021-10-10 00:00:00.000000','Description 2','Medium',0,1),(3,'Event 3','2021-10-10 00:00:00.000000','Description 3','Low',1,0),(4,'Event 4','2021-10-10 00:00:00.000000','Description 4','High',0,0),(5,'Event 5','2021-10-10 00:00:00.000000','Description 5','Medium',1,0);
 /*!40000 ALTER TABLE `Event` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -84,7 +85,7 @@ CREATE TABLE `EventCategory` (
   KEY `fk_Category_has_Event_Category_idx` (`Category_idCategory`),
   CONSTRAINT `fk_Category_has_Event_Category` FOREIGN KEY (`Category_idCategory`) REFERENCES `Category` (`id`),
   CONSTRAINT `fk_Category_has_Event_Event1` FOREIGN KEY (`Event_idEvent`) REFERENCES `Event` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +94,7 @@ CREATE TABLE `EventCategory` (
 
 LOCK TABLES `EventCategory` WRITE;
 /*!40000 ALTER TABLE `EventCategory` DISABLE KEYS */;
-INSERT INTO `EventCategory` VALUES (1,1,1),(1,2,2),(3,1,3),(2,3,4),(2,4,5);
+INSERT INTO `EventCategory` VALUES (1,1,1),(3,1,3),(2,3,4),(2,4,5),(2,2,6);
 /*!40000 ALTER TABLE `EventCategory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -107,14 +108,13 @@ DROP TABLE IF EXISTS `Occurrence`;
 CREATE TABLE `Occurrence` (
   `id` int NOT NULL AUTO_INCREMENT,
   `OccurrenceDeadlineDate` date NOT NULL,
-  `OccurrenceDeadlineTime` time NOT NULL,
   `Event_idEvent` int NOT NULL,
   `OccurrenceStatus` tinyint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_Occurrence_Event1_idx` (`Event_idEvent`),
   CONSTRAINT `fk_Occurrence_Event1` FOREIGN KEY (`Event_idEvent`) REFERENCES `Event` (`id`),
   CONSTRAINT `Occurrence_ibfk_1` FOREIGN KEY (`Event_idEvent`) REFERENCES `Event` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +123,7 @@ CREATE TABLE `Occurrence` (
 
 LOCK TABLES `Occurrence` WRITE;
 /*!40000 ALTER TABLE `Occurrence` DISABLE KEYS */;
-INSERT INTO `Occurrence` VALUES (1,'2024-08-15','14:30:00',1,1),(2,'2024-09-10','09:45:00',3,0),(3,'2024-10-05','16:00:00',5,1);
+INSERT INTO `Occurrence` VALUES (1,'2024-08-17',1,1),(2,'2024-09-10',3,0),(3,'2024-10-05',5,1);
 /*!40000 ALTER TABLE `Occurrence` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -136,4 +136,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-04 21:47:31
+-- Dump completed on 2024-07-08 14:01:08
