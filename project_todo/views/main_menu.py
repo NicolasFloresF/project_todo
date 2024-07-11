@@ -1,3 +1,5 @@
+"""This module contains the main menu view of the project."""
+
 # importing modules from the project
 from project_todo.entities.event import Event
 from project_todo.entities.occurrence import Occurrence
@@ -10,6 +12,8 @@ import flet as ft
 
 
 class CategoriesRow(ft.Column):
+    """This is an auxiliary class for the category interface control."""
+
     def __init__(self, id: int, catDelete, catUpdate):
         super().__init__()
 
@@ -53,6 +57,8 @@ class CategoriesRow(ft.Column):
 
 
 class TasksRow(ft.Column):
+    """This is an auxiliary class for the event interface control."""
+
     def __init__(self, eventId: int, ocurrenceId: int, evntDelete, evntUpdate, checkEvent):
         super().__init__()
         occurrence: Occurrence
@@ -145,6 +151,12 @@ confirmation: bool = False
 
 
 def main_menu(page: ft.Page):
+    """This function creates the main menu view of the project.
+
+    Args:
+        page (ft.Page): The page to be updated.
+    """
+
     from project_todo.common.routing import views_handler
 
     appbar = ft.AppBar(

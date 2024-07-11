@@ -1,3 +1,5 @@
+""" This module contains the view for altering an occurrence."""
+
 # importing project modules
 from project_todo.entities.event import Event
 from project_todo.entities.occurrence import Occurrence
@@ -10,6 +12,12 @@ import flet as ft
 
 
 def alter_occurrence(page: ft.Page, toUpdate: int):
+    """This function creates the view for altering an occurrence.
+
+    Args:
+        page (ft.Page): The page to be updated.
+        toUpdate (int): The id of the occurrence to be altered.
+    """
     from project_todo.common.routing import views_handler
 
     update: Occurrence

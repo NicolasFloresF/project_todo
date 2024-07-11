@@ -1,3 +1,5 @@
+"""This module contains the view for adding an event."""
+
 # importing project modules
 from project_todo.entities.event import Event
 from project_todo.entities.occurrence import Occurrence
@@ -10,6 +12,8 @@ import flet as ft
 
 
 class CategoriesRow(ft.Column):
+    """This is an auxiliary class for the category interface control."""
+
     def __init__(self, id: int, catDelete):
         super().__init__()
 
@@ -34,6 +38,11 @@ class CategoriesRow(ft.Column):
 
 
 def add_event(page: ft.Page):
+    """This function creates the view for adding an event.
+
+    Args:
+        page (ft.Page): The page to be updated.
+    """
     from project_todo.common.routing import views_handler
 
     page.title = "Add Event"
