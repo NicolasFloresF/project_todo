@@ -15,9 +15,7 @@ class CategoriesRow(ft.Column):
 
         category = Category.find_by_id(id)
         self.id = id
-        self.name = ft.Text(
-            category.categoryName, style=ft.TextStyle(color=category.categoryColor)
-        )
+        self.name = ft.Text(category.categoryName, style=ft.TextStyle(color=category.categoryColor))
         self.color = category.categoryColor
         self.cat_delete = catDelete
         self.cat_update = catUpdate
@@ -55,9 +53,7 @@ class CategoriesRow(ft.Column):
 
 
 class TasksRow(ft.Column):
-    def __init__(
-        self, eventId: int, ocurrenceId: int, evntDelete, evntUpdate, checkEvent
-    ):
+    def __init__(self, eventId: int, ocurrenceId: int, evntDelete, evntUpdate, checkEvent):
         super().__init__()
         occurrence: Occurrence
         event: Event
@@ -82,15 +78,11 @@ class TasksRow(ft.Column):
             maintain_state=True,
         )
 
-        self.Title = ft.Checkbox(
-            label=f"{event.eventName}", value=status, on_change=self.check_event
-        )
+        self.Title = ft.Checkbox(label=f"{event.eventName}", value=status, on_change=self.check_event)
 
         self.subTitle = ft.Text()
         for cat in event.categories:
-            txt = ft.TextSpan(
-                text=cat.categoryName, style=ft.TextStyle(color=cat.categoryColor)
-            )
+            txt = ft.TextSpan(text=cat.categoryName, style=ft.TextStyle(color=cat.categoryColor))
             self.subTitle.spans.append(txt)
             if cat != event.categories[-1]:
                 self.subTitle.spans.append(ft.TextSpan(text=", "))
@@ -104,14 +96,8 @@ class TasksRow(ft.Column):
             ),
         )
 
-        self.ltDate = (
-            ft.ListTile(
-                title=ft.Text(f"Creation date: {event.eventDate.strftime('%d/%m/%Y')}")
-            ),
-        )
-        self.ltPriority = (
-            ft.ListTile(title=ft.Text(f"Priority: {event.eventPriority}")),
-        )
+        self.ltDate = (ft.ListTile(title=ft.Text(f"Creation date: {event.eventDate.strftime('%d/%m/%Y')}")),)
+        self.ltPriority = (ft.ListTile(title=ft.Text(f"Priority: {event.eventPriority}")),)
         self.ltDeadlineDate = (
             ft.ListTile(
                 title=ft.Text(
@@ -161,6 +147,26 @@ confirmation: bool = False
 def main_menu(page: ft.Page):
     from project_todo.common.routing import views_handler
 
+    appbar = ft.AppBar(
+        leading=ft.Icon(ft.icons.DONE_OUTLINE_ROUNDED),
+        leading_width=40,
+        title=ft.Text("Just TODOit"),
+        center_title=True,
+        bgcolor=ft.colors.BLUE_700,
+        shape=ft.NotchShape.CIRCULAR,
+        actions=[
+            ft.IconButton(ft.icons.MENU_ROUNDED),
+        ],
+    )
+    page.add(appbar)
+
+    page.floating_action_button_location = ft.FloatingActionButtonLocation.CENTER_DOCKED
+    page.add(
+        ft.BottomAppBar(
+            shape=ft.NotchShape.CIRCULAR,
+        )
+    )
+
     page.scroll = ft.ScrollMode.ALWAYS
     page.title = "To-Do App"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -199,23 +205,7 @@ def main_menu(page: ft.Page):
     page.add(evntTasks)
     page.add(events)
 
-    occTasks = ft.Text(
-        "Occurrence Events", visible=False, style=ft.TextThemeStyle.BODY_LARGE
-    )
-
-    appbar = ft.AppBar(
-        leading=ft.Icon(ft.icons.DONE_OUTLINE_ROUNDED),
-        leading_width=40,
-        title=ft.Text("Just TODOit"),
-        center_title=True,
-        bgcolor=ft.colors.BLUE_600,
-        shape=ft.NotchShape.CIRCULAR,
-        actions=[
-            ft.IconButton(ft.icons.MENU_ROUNDED),
-        ],
-    )
-    page.add(appbar)
-
+    occTasks = ft.Text("Occurrence Events", visible=False, style=ft.TextThemeStyle.BODY_LARGE)
     page.add(occTasks)
     page.add(occurences)
 
@@ -234,9 +224,7 @@ def main_menu(page: ft.Page):
     dlg_modal_event = ft.AlertDialog(
         modal=True,
         title=ft.Text("Delete Confirmation"),
-        content=ft.Text(
-            "Are you sure you want to delete this event? (this will delete all occurrences of this event)"
-        ),
+        content=ft.Text("Are you sure you want to delete this event? (this will delete all occurrences of this event)"),
         actions=[
             ft.TextButton("Yes", on_click=close_dlg),
             ft.TextButton("No", on_click=close_dlg),
@@ -352,23 +340,14 @@ def main_menu(page: ft.Page):
         if index == 0:
             evntTasks.visible = True
             occTasks.visible = True
-            page.add(
-                ft.Container(
-                    ft.FloatingActionButton(
-                        bgcolor=ft.colors.BLUE_600,
-                        icon=ft.icons.ADD,
-                        on_click=lambda e: views_handler(page)["/add_event"](page),
-                        shape=ft.RoundedRectangleBorder(radius=40),
-                    ),
-                    alignment=ft.alignment.center,
-                )
-                # ft.FloatingActionButtonLocation.CENTER_DOCKED,
-                # ft.FloatingActionButton(
-                #    icon=ft.icons.ADD,
-                #    on_click=lambda e: views_handler(page)["/add_event"](page),
-                # )
-            )
 
+            page.add(
+                ft.FloatingActionButton(
+                    icon=ft.icons.ADD,
+                    on_click=lambda e: views_handler(page)["/add_event"](page),
+                    shape=ft.RoundedRectangleBorder(radius=40),
+                )
+            )
             for event in Event.all():
                 event: Event
 
@@ -387,6 +366,7 @@ def main_menu(page: ft.Page):
                 ft.FloatingActionButton(
                     icon=ft.icons.ADD,
                     on_click=lambda e: views_handler(page)["/add_event"](page),
+                    shape=ft.RoundedRectangleBorder(radius=40),
                 )
             )
             for ocurrence in Occurrence.all():
@@ -395,13 +375,7 @@ def main_menu(page: ft.Page):
 
                 event = Event.find_by_id(ocurrence.Event_idEvent)
 
-                task = TasksRow(
-                    event.id,
-                    ocurrence.id,
-                    occurrence_delete,
-                    occurrence_update,
-                    occurrence_check,
-                )
+                task = TasksRow(event.id, ocurrence.id, occurrence_delete, occurrence_update, occurrence_check)
 
                 events.controls.append(task)
 
@@ -415,6 +389,7 @@ def main_menu(page: ft.Page):
                 ft.FloatingActionButton(
                     icon=ft.icons.ADD,
                     on_click=lambda e: views_handler(page)["/add_category"](page),
+                    shape=ft.RoundedRectangleBorder(radius=40),
                     bgcolor=ft.colors.ORANGE_700,
                 )
             )
