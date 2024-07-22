@@ -1,3 +1,5 @@
+"""This module contains the view for adding a category to the todo list."""
+
 # importing modules from the project
 from project_todo.entities.category import Category
 
@@ -6,6 +8,11 @@ import flet as ft
 
 
 def add_category(page: ft.Page):
+    """This function creates the view for adding a category to the todo list.
+
+    Args:
+        page (ft.Page): The page to be updated.
+    """
     from project_todo.common.routing import views_handler
 
     page.title = "Add Category"

@@ -15,40 +15,7 @@ from datetime import date, time
 
 
 def main(page: ft.Page):
-    # def route_change(route):
-    #    print(page.route)
-    #    page.views.clear()
-    #    page.views.append(views_handler(page)[page.route])
-    #    page.update()
-    #
-    # def view_pop(view):
-    #    page.views.pop()
-    #    top_view = page.views[-1]
-    #    page.go(top_view.route)
-
-    # page.title = "To-Do App"
-    # page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    # page.update()
-    #
-    ## create application instance
-    # todo = TodoApp()
-    #
-    ## add application's root control to the page
-    # page.add(todo)
-    # todo.refresh()
-    # for event in Event.all():
-    #    print(event.eventName)
-
-    # page.add(main_menu())
-    # main_menu(page)
-    # add_category(page)
-    # page.on_route_change = route_change
-    # page.go("/")
-
-    # uma ideia para troca de página?
-    # add_category(page)
-    # page.clean()
-    # add_event(page)
+    """This function is responsible for running the application."""
 
     views_handler(page)["/"](page)
 

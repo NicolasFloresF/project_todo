@@ -1,3 +1,5 @@
+"""This module contains the view for altering a category."""
+
 # importing modules from the project
 from project_todo.entities.category import Category
 
@@ -6,6 +8,12 @@ import flet as ft
 
 
 def alter_category(page: ft.Page, toUpdate: int):
+    """This function creates the view for altering a category.
+
+    Args:
+        page (ft.Page): The page to be updated.
+        toUpdate (int): The id of the category to be altered.
+    """
     from project_todo.common.routing import views_handler
 
     update: Category

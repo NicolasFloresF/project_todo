@@ -1,3 +1,5 @@
+"""This module contains the main menu view of the project."""
+
 # importing modules from the project
 from project_todo.entities.event import Event
 from project_todo.entities.occurrence import Occurrence
@@ -10,6 +12,8 @@ import flet as ft
 
 
 class CategoriesRow(ft.Column):
+    """This is an auxiliary class for the category interface control."""
+
     def __init__(self, id: int, catDelete, catUpdate):
         super().__init__()
 
@@ -52,11 +56,9 @@ class CategoriesRow(ft.Column):
         self.cat_update(self)
 
 
-# TODO: Confirmar exclusão
-# TODO: Dar nome aos inputs e submeter para dar update no banco
-# TODO: CRUD categorias
-# TODO: adcionar eventos
 class TasksRow(ft.Column):
+    """This is an auxiliary class for the event interface control."""
+
     def __init__(self, eventId: int, ocurrenceId: int, evntDelete, evntUpdate, checkEvent):
         super().__init__()
         occurrence: Occurrence
@@ -149,7 +151,33 @@ confirmation: bool = False
 
 
 def main_menu(page: ft.Page):
+    """This function creates the main menu view of the project.
+
+    Args:
+        page (ft.Page): The page to be updated.
+    """
+
     from project_todo.common.routing import views_handler
+
+    appbar = ft.AppBar(
+        leading=ft.Icon(ft.icons.DONE_OUTLINE_ROUNDED),
+        leading_width=40,
+        title=ft.Text("Just TODOit"),
+        center_title=True,
+        bgcolor=ft.colors.BLUE_700,
+        shape=ft.NotchShape.CIRCULAR,
+        actions=[
+            ft.IconButton(ft.icons.MENU_ROUNDED),
+        ],
+    )
+    page.add(appbar)
+
+    page.floating_action_button_location = ft.FloatingActionButtonLocation.CENTER_DOCKED
+    page.add(
+        ft.BottomAppBar(
+            shape=ft.NotchShape.CIRCULAR,
+        )
+    )
 
     page.scroll = ft.ScrollMode.ALWAYS
     page.title = "To-Do App"
@@ -324,10 +352,12 @@ def main_menu(page: ft.Page):
         if index == 0:
             evntTasks.visible = True
             occTasks.visible = True
+
             page.add(
                 ft.FloatingActionButton(
                     icon=ft.icons.ADD,
                     on_click=lambda e: views_handler(page)["/add_event"](page),
+                    shape=ft.RoundedRectangleBorder(radius=40),
                 )
             )
             for event in Event.all():
@@ -348,6 +378,7 @@ def main_menu(page: ft.Page):
                 ft.FloatingActionButton(
                     icon=ft.icons.ADD,
                     on_click=lambda e: views_handler(page)["/add_event"](page),
+                    shape=ft.RoundedRectangleBorder(radius=40),
                 )
             )
             for ocurrence in Occurrence.all():
@@ -370,6 +401,7 @@ def main_menu(page: ft.Page):
                 ft.FloatingActionButton(
                     icon=ft.icons.ADD,
                     on_click=lambda e: views_handler(page)["/add_category"](page),
+                    shape=ft.RoundedRectangleBorder(radius=40),
                     bgcolor=ft.colors.ORANGE_700,
                 )
             )

@@ -1,3 +1,5 @@
+"""This module is responsible for routing the views of the project."""
+
 # importing project modules
 from project_todo.views.add_category import *
 from project_todo.views.add_event import *
