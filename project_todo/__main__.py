@@ -20,6 +20,11 @@ def main(page: ft.Page):
     views_handler(page)["/"](page)
 
 
+def main():
+    print("test")
+    print(modulo.a)
+
+
 if __name__ == "__main__":
 
     load_dotenv()
